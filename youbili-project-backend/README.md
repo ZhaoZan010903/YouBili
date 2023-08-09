@@ -4,6 +4,8 @@
 
 ##### 需要在application.yaml之中添加配置:
 
+***
+
 * mysql
 * elasticsearch
 * mongoDB
