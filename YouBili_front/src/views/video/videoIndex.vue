@@ -365,7 +365,6 @@ export default {
       videoPlayer: {},
       isMeDanmu: '',
 
-      //TODO 拼接!!!
       videoSrc: [
         // 'https://youbili-test.oss-cn-beijing.aliyuncs.com/3-89/3-89-1080.mp4',//1080P
         // 'https://youbili-test.oss-cn-beijing.aliyuncs.com/3-89/3-89-720.mp4',//720P
