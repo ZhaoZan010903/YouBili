@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.common.cacheUtils.count.video.dao.persist.mapper.VideoCountMapper">
+    <select id="selectCount"
+            resultType="cn.tedu.youbiliprojectbackend.common.cacheUtils.count.video.pojo.VideoCount">
+        SELECT videoID,
+               viewCount,
+               likeCount,
+               favoriteCount,
+               dislikeCount,
+               barrageCount,
+               commentCount
+        FROM video
+        WHERE reviewStatus = 'Approved'
+    </select>
+
+</mapper>

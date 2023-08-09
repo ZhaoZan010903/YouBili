@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.user.follow.dao.persist.mapper.FollowMapper">
+    <insert id="insertAll">
+        INSERT INTO follow (followerID, followedID, followDate)
+        VALUES (#{followerID}, #{followedID}, followDate = NOW())
+    </insert>
+    <select id="selectListByUserId" resultType="cn.tedu.youbiliprojectbackend.modules.user.follow.pojo.vo.FollowListVO">
+        SELECT followID, userID followedID, nickname, fans fansCount, follows followCount, imgUrl
+        FROM youbili_v1.follow
+                 JOIN youbili_v1.user
+                      ON followedID = userID
+        where followerID = #{userID}
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM youbili_v1.follow
+        WHERE followID = #{followID}
+          AND followerID = #{userID}
+    </delete>
+
+    <select id="selectByFollowerIDAndFollowedID" resultType="int">
+        SELECT COUNT(*)
+        FROM youbili_v1.follow
+        WHERE followerID = #{followerID}
+          AND followedID = #{followedID}
+    </select>
+
+    <select id="selectByUserIDAndFollowID"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.follow.pojo.entity.followedID">
+        SELECT followedID
+        FROM youbili_v1.follow
+        WHERE followerID = #{userID}
+          AND followID = #{followID}
+    </select>
+
+    <select id="selectByFollowId" resultType="long">
+        SELECT followedID
+        FROM youbili_v1.follow
+        WHERE followID = #{followID}
+    </select>
+</mapper>

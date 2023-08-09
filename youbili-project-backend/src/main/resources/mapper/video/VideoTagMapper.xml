@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.video.uplaod.dao.mapper.AddTagMapper">
+    <insert id="insertTag">
+        INSERT INTO videotag (videoID, tagID)
+        values (#{videoID}, #{tagID})
+    </insert>
+
+
+</mapper>

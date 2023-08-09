@@ -1,0 +1,2 @@
+# @no-cookie-jar
+GET http://localhost:8089/user/history/list

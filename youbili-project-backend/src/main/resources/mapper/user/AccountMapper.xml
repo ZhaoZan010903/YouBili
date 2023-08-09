@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.user.account.dao.mapper.AccountMapper">
+    <select id="SelectByUserName" resultType="cn.tedu.youbiliprojectbackend.modules.user.account.pojo.entity.Account">
+        SELECT userID,
+               username,
+               nickname,
+               password,
+               email,
+               birthday,
+               accountLevel,
+               fans,
+               follows,
+               videoCount,
+               totalLikes,
+               membershipStatus,
+               registrationDate,
+               lastLoginDate,
+               imgUrl,
+               enable,
+               gmtCreate,
+               gmtModified
+        FROM user
+        where username = #{username}
+    </select>
+
+    <select id="SelectByMe" resultType="cn.tedu.youbiliprojectbackend.modules.user.account.pojo.vo.AccountMeVO">
+        SELECT nickname, fans, follows, imgUrl, accountLevel
+        FROM user
+        WHERE userID = #{userID}
+    </select>
+</mapper>

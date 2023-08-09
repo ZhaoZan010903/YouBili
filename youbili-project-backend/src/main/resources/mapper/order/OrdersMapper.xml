@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.orders.dao.mapper.OrdersMapper">
+
+    <insert id="insertOrders">
+        INSERT INTO orders (zfbNumber, tradeName, orderNumber, price, payment, userID, enable)
+        values (#{zfbNumber}, #{tradeName}, #{orderNumber}, #{price}, #{payment}, #{userID}, #{enable})
+    </insert>
+
+    <update id="update">
+        UPDATE orders
+        SET zfbNumber =#{zfbNumber},
+            enable    = #{enable}
+        WHERE orderNumber = #{orderNumber}
+    </update>
+
+    <delete id="deleteById">
+        DELETE
+        FROM orders
+        WHERE orderID = #{orderID}
+    </delete>
+
+
+    <select id="list" resultType="cn.tedu.youbiliprojectbackend.modules.orders.pojo.vo.OrderListVO">
+        SELECT orderID,
+               tradeName,
+               orderNumber,
+               zfbNumber,
+               price,
+               payment,
+               payTime,
+               userID,
+               enable
+        FROM orders
+    </select>
+
+
+    <select id="selectOne" resultType="cn.tedu.youbiliprojectbackend.modules.orders.pojo.entity.Order">
+        SELECT orderID,
+               tradeName,
+               orderNumber,
+               zfbNumber,
+               price,
+               payment,
+               payTime,
+               userID,
+               enable
+        FROM youbili_v1.orders
+        WHERE orderNumber = #{orderNumber}
+    </select>
+
+</mapper>

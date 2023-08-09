@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.user.history.dao.mapper.HistoryMapper">
+    <insert id="add">
+        INSERT INTO history (userID, videoID, watchDuration)
+        VALUES (#{userID}, #{videoID}, #{watchDuration})
+    </insert>
+
+    <update id="updateWatchDuration">
+        UPDATE history
+        SET watchDuration = #{watchDuration}
+        WHERE userID = #{userID}
+          AND videoID = #{videoID}
+    </update>
+    <update id="updateWatchDate">
+        UPDATE history
+        SET watchDate = #{watchDate}
+        WHERE userID = #{userID}
+          AND videoID = #{videoID}
+    </update>
+    <update id="updateEnable">
+        UPDATE history
+        SET enable = 1
+        WHERE userID = #{userID}
+          AND videoID = #{videoID }
+          AND enable = 0
+    </update>
+
+    <update id="deleteByHistoryId">
+        UPDATE history
+        SET enable = 0
+        WHERE userID = #{userID}
+          AND historyID = #{historyID}
+    </update>
+
+
+    <select id="listByUserId"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.history.pojo.vo.HistoryListVO">
+        SELECT h.historyId,
+               u.userID,
+               v.videoID,
+               h.watchDate,
+               h.watchDuration,
+               u.imgUrl,
+               v.videoImgUrl,
+               u.nickname,
+               v.title
+        FROM history h
+                 left JOIN video v ON h.videoID = v.videoID
+                 left JOIN user u ON v.userID = u.userID
+        WHERE h.enable = 1
+          and h.userID = #{userID}
+    </select>
+
+    <select id="selectHistory"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.history.pojo.catche.HistoryStandardCatch">
+        SELECT historyId,
+               userID,
+               videoID,
+               watchDate,
+               watchDuration,
+               enable,
+               gmtCreate,
+               gmtModified
+        FROM history
+        WHERE userID = #{userID}
+          AND videoID = #{videoID}
+    </select>
+</mapper>

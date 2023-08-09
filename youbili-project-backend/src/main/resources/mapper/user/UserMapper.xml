@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.user.register.dao.mapper.UserMapper">
+    <insert id="insertUser">
+        INSERT INTO user (username, nickname, password, email)
+        VALUES (#{username}, #{nickname}, #{password}, #{email})
+    </insert>
+
+
+    <select id="selectByEmail" resultType="cn.tedu.youbiliprojectbackend.modules.user.register.pojo.vo.UserRegist">
+        SELECT username, userID
+        FROM user
+        WHERE email = #{email}
+    </select>
+    <select id="selectByUsername"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.register.pojo.vo.UserRegist">
+        SELECT username, userID
+        FROM user
+        WHERE username = #{username}
+    </select>
+
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.user.favorite.dao.persist.mapper.FavoriteMapper">
+
+    <insert id="insertAll">
+        INSERT INTO favorite (userID, videoID)
+        VALUES (#{userID}, #{videoID})
+    </insert>
+
+    <delete id="deleteByFavoriteIDAndUserID">
+        DELETE
+        FROM favorite
+        WHERE userID = #{userID}
+          AND favoriteID = #{favoriteID}
+    </delete>
+
+
+    <select id="selectListById"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.favorite.pojo.vo.FavoriteVO">
+        SELECT f.favoriteID, v.videoID, u.nickname, f.favoriteDate, v.title, u.imgUrl, v.videoImgUrl
+        FROM favorite f
+                 left JOIN video v on f.videoID = v.videoID
+                 left JOIN user u ON v.userID = u.userID
+        WHERE f.enable = 1
+          and f.userID = #{userID}
+    </select>
+
+
+    <select id="selectByEnable"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.favorite.pojo.entity.Favorite">
+        SELECT favoriteID, userID, videoID, favoriteDate, enable, gmtCreate, gmtModified
+        FROM favorite
+        WHERE userID = #{userID}
+          AND videoID = #{videoID}
+    </select>
+
+
+    <delete id="deleteByuserIDandvideoID">
+        DELETE
+        FROM favorite
+        WHERE userID = #{userID}
+          AND videoID = #{videoID}
+    </delete>
+
+
+</mapper>

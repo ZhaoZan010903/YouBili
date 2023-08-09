@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.social.notice.dao.persist.mapper.NoticeMapper">
+    <!--    &lt;!&ndash; List<NoticeAllListVO> userNoticeList(); &ndash;&gt;-->
+    <!--    <select id="userNoticeList"-->
+    <!--            resultType="cn.tedu.youbiliprojectbackend.modules.social.notice.pojo.vo.NoticeAllListVO">-->
+    <!--        SELECT userID, typeEnable, noticeText, noticeTime-->
+    <!--        FROM notice-->
+    <!--        WHERE notice.userID = #{userID}-->
+    <!--        ORDER BY noticeID DESC-->
+    <!--    </select>-->
+
+    <!--    &lt;!&ndash; List<NoticeAllListVO> adminNoticeList();&ndash;&gt;-->
+
+    <!--    &lt;!&ndash; NoticeAllListVO getStandardByTypeEnable(Long id);&ndash;&gt;-->
+    <!--    <select id="getStandardByTypeEnable"-->
+    <!--            resultType="cn.tedu.youbiliprojectbackend.modules.social.notice.pojo.vo.NoticeAllListVO">-->
+    <!--        SELECT userID, typeEnable, noticeText, noticeTime-->
+    <!--        FROM notice-->
+    <!--        WHERE notice.noticeID = #{noticeID}-->
+    <!--    </select>-->
+
+    <!--    &lt;!&ndash; List<NoticeAllListVO> adminNoticeList();&ndash;&gt;-->
+    <!--    <select id="adminNoticeList" resultType="cn.tedu.youbiliprojectbackend.modules.social.notice.pojo.vo.NoticeAllListVO">-->
+    <!--        SELECT userID, typeEnable, noticeText, noticeTime-->
+    <!--        FROM notice-->
+    <!--        WHERE notice.noticeID = #{noticeID}-->
+    <!--    </select>-->
+
+    <!-- List<NoticeAllListVO> adminNoticeList(); -->
+    <select id="adminEnableNoticeList"
+            resultType="cn.tedu.youbiliprojectbackend.modules.social.notice.pojo.vo.NoticeAllListVO">
+        SELECT noticeID, userID, typeEnable, noticeText, noticeTime, typeEnable
+        FROM notice
+        WHERE typeEnable = 0
+        ORDER BY noticeID DESC
+    </select>
+
+    <!--  List<NoticeAllListVO> userNoticeList();-->
+    <select id="userEnableNoticeList"
+            resultType="cn.tedu.youbiliprojectbackend.modules.social.notice.pojo.vo.NoticeAllListVO">
+        SELECT typeEnable, noticeText, noticeTime, userID
+        FROM notice
+        WHERE typeEnable = 1
+        ORDER BY noticeID DESC
+    </select>
+
+    <select id="userNoticeUserId"
+            resultType="cn.tedu.youbiliprojectbackend.modules.social.notice.pojo.vo.NoticeAllListVO">
+        SELECT noticeID, userID, typeEnable, noticeText, noticeTime
+        FROM notice
+        WHERE userID = #{userID}
+        ORDER BY noticeID DESC
+    </select>
+
+
+    <!-- void deleteByUserId(Long id);-->
+    <delete id="deleteByUserId">
+        DELETE
+        FROM notice
+        WHERE userID = #{userId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.common.cacheUtils.videoList.dao.persist.mapper.VideoMapper">
+    <select id="selectAll"
+            resultType="cn.tedu.youbiliprojectbackend.common.cacheUtils.videoList.pojo.vo.VideoUserCache">
+        SELECT v.videoID,
+               v.userID,
+               v.title,
+               v.description,
+               v.uploadDate,
+               v.duration,
+               v.videoSrcUrl,
+               v.videoImgUrl,
+               u.nickname,
+               u.imgUrl
+        FROM video v
+                 JOIN user u on v.userID = u.userID
+        WHERE reviewStatus = 'Approved'
+    </select>
+</mapper>

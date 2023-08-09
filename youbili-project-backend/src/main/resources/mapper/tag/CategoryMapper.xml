@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.tag.classification.dao.mapper.CategoryMapper">
+
+    <select id="list" resultType="cn.tedu.youbiliprojectbackend.modules.tag.classification.pojo.vo.CategoryTitleVO">
+        SELECT categoryID, categoryName
+        FROM youbili_v1.categorie
+    </select>
+
+    <select id="select" resultType="cn.tedu.youbiliprojectbackend.modules.tag.classification.pojo.vo.CategoryVideoVO">
+        SELECT videoID
+        FROM youbili_v1.videocategory
+        WHERE categoryID = #{categoryID}
+    </select>
+</mapper>

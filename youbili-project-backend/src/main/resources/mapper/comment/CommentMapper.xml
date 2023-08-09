@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.social.comment.dao.persist.mapper.CommentMapper">
+    <select id="selectFirstCommentByVideoID"
+            resultType="cn.tedu.youbiliprojectbackend.modules.social.comment.pojo.vo.CommentFirstVO">
+        SELECT commentID, nickname, imgUrl, commentText, likeCount, dislikeCount, c.gmtCreate
+        FROM comment c
+                 LEFT JOIN user u on c.userID = u.userID
+        WHERE videoID = #{videoID}
+        ORDER BY c.likeCount
+    </select>
+
+    <select id="selectCommentListByCommentID"
+            resultType="cn.tedu.youbiliprojectbackend.modules.social.comment.pojo.vo.CommentListVO">
+        SELECT c.replyID,
+               u.nickname,
+               u.imgUrl,
+               u2.nickname pNickname,
+               c.replyText,
+               c.likeCount,
+               c.dislikeCount,
+               c.gmtCreate
+        FROM commentreplie c
+                 LEFT JOIN user u on c.userID = u.userID
+                 LEFT JOIN commentreplie c2 ON c.parentReplyID = c2.replyID
+                 LEFT JOIN user u2 ON c2.userID = u2.userID
+        WHERE c.commentID = #{commentID}
+        ORDER BY c.gmtCreate
+    </select>
+</mapper>

@@ -1,0 +1,63 @@
+#端口号
+server:
+  port: 10001
+  # Servlet（Java用于处理请求的组件）的配置
+  servlet:
+    # 编码配置
+    encoding:
+      # 强制使用指定的编码
+      force: true
+      # 字符集
+      charset: UTF-8
+
+spring:
+  profiles:
+    active: public
+  banner:
+    charset: UTF-8
+    location: static/banner.txt
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
+
+    youbili:
+      jwt:
+        # JWT的有效时长，以分钟为单位
+        duration-in-minute: 86400L
+        # JWT的secretKey
+        secret-key: fNesMDkqrJFdsfDSwAbFLJ8SnsHJ438AF72D73aKJSmfdsafdLKKAFKDSJ
+        # 分页
+      dao:
+        default-query-page-size: 5
+
+
+
+  #设置静态资源文件夹
+  web:
+    resources:
+      static-locations: file:c:/files,classpath:static
+
+# mybatis
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  configuration:
+#    map-underscore-to-camel-case: true   # 配置表字段名和属性名规范不一致时自动匹配
+
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: false
+  mapper-locations: classpath:mapper/**/*.xml
+
+
+logging:
+  level:
+    cn.tedu: debug
+
+
+
+
+

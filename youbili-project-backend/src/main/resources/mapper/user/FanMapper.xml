@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.user.follow.dao.persist.mapper.FanMapper">
+    <select id="selectListByUserId" resultType="cn.tedu.youbiliprojectbackend.modules.user.follow.pojo.vo.FanListVO">
+        SELECT followID, followerID, nickname, fans fansCount, follows followCount, imgUrl
+        FROM youbili_v1.follow
+                 JOIN youbili_v1.user
+                      ON followerID = userID
+        where followedID = #{userID}
+    </select>
+
+    <delete id="delete">
+        DELETE
+        FROM youbili_v1.follow
+        WHERE followID = #{followID}
+          AND followedID = #{userID}
+    </delete>
+
+    <select id="selectByUserIDAndFollowID" resultType="int">
+        SELECT COUNT(*)
+        FROM youbili_v1.follow
+        WHERE followedID = #{userID}
+          AND followID = #{followID}
+    </select>
+</mapper>

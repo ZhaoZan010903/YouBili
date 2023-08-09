@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.user.personal.dao.persist.mapper.PersonalMapper">
+    <select id="selectVideoInfoByUserId"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.personal.pojo.vo.CenterVideoInfoVO">
+        SELECT videoImgUrl, title, likeCount, categoryName, commentCount, v.description, v.viewCount
+        FROM user u
+                 LEFT JOIN video v on u.userID = v.userID
+                 LEFT JOIN videocategory vc on v.videoID = vc.videoID
+                 LEFT JOIN categorie c ON vc.categoryID = c.categoryID
+        WHERE u.userID = #{id}
+        ORDER BY v.gmtCreate DESC
+        LIMIT 3;
+    </select>
+
+    <select id="selectUserInfoByUserId"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.personal.pojo.vo.PersonalCenterUserInfoVO">
+        SELECT u.imgUrl, nickname, fans, follows, totalLikes, birthday, accountLevel
+        FROM user u
+        WHERE u.userID = #{id}
+    </select>
+
+    <select id="selectFavoriteInfoByUserId"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.personal.pojo.vo.CenterVideoInfoVO">
+        SELECT u2.nickname,
+               u2.imgUrl,
+               videoImgUrl,
+               title,
+               likeCount,
+               categoryName,
+               commentCount,
+               v.description,
+               v.viewCount
+        FROM user u
+                 LEFT JOIN favorite f on u.userID = f.userID
+                 LEFT JOIN video v on f.videoID = v.videoID
+                 LEFT JOIN user u2 ON v.userID = u2.userID
+                 LEFT JOIN videocategory v2 on v.videoID = v2.videoID
+                 LEFT JOIN categorie c on v2.categoryID = c.categoryID
+        WHERE u.userID = #{id}
+        ORDER BY f.gmtCreate DESC
+        LIMIT 3;
+    </select>
+
+    <select id="selectHistoryInfoByUserId"
+            resultType="cn.tedu.youbiliprojectbackend.modules.user.personal.pojo.vo.CenterVideoInfoVO">
+        SELECT u2.nickname,
+               u2.imgUrl,
+               videoImgUrl,
+               title,
+               likeCount,
+               categoryName,
+               commentCount,
+               v.description,
+               v.viewCount
+        FROM user u
+                 LEFT JOIN history h on u.userID = h.userID
+                 LEFT JOIN video v on h.videoID = v.videoID
+                 LEFT JOIN user u2 ON v.userID = u2.userID
+                 LEFT JOIN videocategory v2 on v.videoID = v2.videoID
+                 LEFT JOIN categorie c on v2.categoryID = c.categoryID
+        WHERE u.userID = #{id}
+        ORDER BY h.gmtCreate DESC
+        LIMIT 3;
+    </select>
+</mapper>

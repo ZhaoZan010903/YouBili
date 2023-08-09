@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.video.index.dao.persist.mapper.TagMapper">
+
+    <select id="select" resultType="cn.tedu.youbiliprojectbackend.modules.video.index.pojo.vo.VideoTagVO">
+        SELECT tagName
+        FROM tag
+                 JOIN videotag v on tag.tagID = v.tagID
+        WHERE v.videoID = #{videoID}
+    </select>
+</mapper>

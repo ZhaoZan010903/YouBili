@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.modules.recommend.mahoutCF.mapper.MahoutMapper">
+    <select id="selectuser"
+            resultType="cn.tedu.youbiliprojectbackend.modules.recommend.mahoutCF.pojo.UserArticleOperation">
+        SELECT mahoutID,
+               userID,
+               videoID,
+               type,
+               SUM(
+                       CASE type
+                           WHEN 0 THEN -3
+                           WHEN 1 THEN 1
+                           WHEN 2 THEN 3
+                           WHEN 3 THEN 5
+                           else 0 END
+                   ) AS "value"
+        FROM mahout
+        GROUP BY userID, videoID, mahoutID, type
+        ORDER BY userID
+    </select>
+</mapper>

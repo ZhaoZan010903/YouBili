@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.tedu.youbiliprojectbackend.common.data.mapper.DataMapper">
+
+    <insert id="HistoryMahoutMapper">
+        INSERT INTO mahout (userID, videoID, type)
+        SELECT userID, videoID, 1
+        FROM history
+        WHERE watchDate > CURDATE() - INTERVAL 1 DAY;
+    </insert>
+    <insert id="LikesMahoutMapper">
+        INSERT INTO mahout (userID, videoID, type)
+        SELECT userID,
+               videoID,
+               case when typeEnable = 1 then 2 else 0 end as type
+        FROM likes
+        WHERE likeDate > CURDATE() - INTERVAL 1 DAY;
+    </insert>
+    <insert id="FavoriteMahoutMapper">
+        INSERT INTO mahout(userID, videoID, type)
+        SELECT userID, videoID, 3
+        FROM favorite
+        WHERE favoriteDate > CURDATE() - INTERVAL 1 DAY;
+    </insert>
+    <insert id="VideoDateMapper">
+        INSERT INTO heat(upload, videoID)
+        SELECT uploadDate, videoID
+        FROM video
+        WHERE uploadDate > CURDATE() - INTERVAL 1 DAY;
+    </insert>
+</mapper>
