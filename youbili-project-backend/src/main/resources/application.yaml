@@ -60,6 +60,9 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 management:
+  health:
+    mail:
+      enabled: false
   endpoints:
     web:
       exposure:
