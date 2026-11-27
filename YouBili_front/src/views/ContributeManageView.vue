@@ -65,8 +65,8 @@
 
         <el-table-column label="操作" width="170" fixed="right">
           <template #default="{ row }">
-            <el-button text type="primary" size="small" @click="openEdit(row)">编辑</el-button>
-            <el-button text type="danger" size="small" @click="handleDelete(row)">删除</el-button>
+            <el-button text type="primary" size="small" @click="openEdit(row as VideoCard)">编辑</el-button>
+            <el-button text type="danger" size="small" @click="handleDelete(row as VideoCard)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>

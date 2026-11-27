@@ -48,7 +48,7 @@
               size="small"
               round
               :loading="payingOrder === row.orderNumber"
-              @click="handlePay(row)"
+              @click="handlePay(row as OrderItem)"
             >
               去支付
             </el-button>
@@ -57,7 +57,7 @@
               type="danger"
               text
               size="small"
-              @click="handleDelete(row)"
+              @click="handleDelete(row as OrderItem)"
             >
               删除
             </el-button>
