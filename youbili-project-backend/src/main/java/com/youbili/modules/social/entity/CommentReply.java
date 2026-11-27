@@ -10,39 +10,39 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("commentreplie")
+@TableName("comment_replies")
 public class CommentReply {
 
-    @TableId(value = "replyID", type = IdType.AUTO)
+    @TableId(value = "reply_id", type = IdType.AUTO)
     private Long replyId;
 
-    @TableField("commentID")
+    @TableField("comment_id")
     private Long commentId;
 
-    @TableField("parentReplyID")
+    @TableField("parent_reply_id")
     private Long parentReplyId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("replyText")
+    @TableField("reply_text")
     private String replyText;
 
-    @TableField("replyDate")
+    @TableField("reply_date")
     private LocalDateTime replyDate;
 
-    @TableField("likeCount")
+    @TableField("like_count")
     private Integer likeCount;
 
-    @TableField("dislikeCount")
+    @TableField("dislike_count")
     private Integer dislikeCount;
 
     @TableField("enable")
     private Integer enable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

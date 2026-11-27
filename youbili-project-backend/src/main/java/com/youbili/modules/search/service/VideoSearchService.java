@@ -1,6 +1,7 @@
 package com.youbili.modules.search.service;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.BulkResponse;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
@@ -39,14 +40,20 @@ public class VideoSearchService {
         ElasticsearchClient esClient = esClientProvider.getIfAvailable();
         if (esClient != null && StringUtils.hasText(trimmed)) {
             try {
-                SearchResponse<VideoCardVO> response = esClient.search(s -> s
-                                .index(INDEX_NAME)
-                                .from((safePage - 1) * safeSize)
-                                .size(safeSize)
-                                .query(q -> q.multiMatch(m -> m
-                                        .fields("title^3", "description", "authorNickname^2")
-                                        .query(trimmed))),
-                        VideoCardVO.class);
+                SearchResponse<VideoCardVO> response = esClient.search(s -> {
+                    s.index(INDEX_NAME)
+                            .from((safePage - 1) * safeSize)
+                            .size(safeSize)
+                            .query(q -> q.multiMatch(m -> m
+                                    .fields("title^3", "description", "authorNickname^2")
+                                    .query(trimmed)));
+                    if ("views".equalsIgnoreCase(sort)) {
+                        s.sort(so -> so.field(f -> f.field("viewCount").order(SortOrder.Desc)));
+                    } else if ("likes".equalsIgnoreCase(sort)) {
+                        s.sort(so -> so.field(f -> f.field("likeCount").order(SortOrder.Desc)));
+                    }
+                    return s;
+                }, VideoCardVO.class);
 
                 List<VideoCardVO> list = new ArrayList<>();
                 for (Hit<VideoCardVO> hit : response.hits().hits()) {
@@ -57,7 +64,7 @@ public class VideoSearchService {
                 long total = response.hits().total() == null ? list.size() : response.hits().total().value();
                 return PageResult.of(safePage, safeSize, total, list);
             } catch (Exception e) {
-                log.warn("Elasticsearch search failed, falling back to MySQL: {}", e.getMessage());
+                log.warn("Elasticsearch search failed, falling back to PostgreSQL: {}", e.getMessage());
             }
         }
 
@@ -74,13 +81,42 @@ public class VideoSearchService {
         return videoMapper.suggestTitles(keyword.trim(), 8);
     }
 
-    @Scheduled(fixedDelay = 1_800_000L, initialDelay = 60_000L)
+    public void syncVideo(Long videoId) {
+        ElasticsearchClient esClient = esClientProvider.getIfAvailable();
+        if (esClient == null || videoId == null) {
+            return;
+        }
+        try {
+            ensureIndexExists(esClient);
+            VideoCardVO card = videoMapper.selectVideoCardById(videoId);
+            if (card != null && "Approved".equals(card.getReviewStatus())) {
+                esClient.index(i -> i.index(INDEX_NAME).id(String.valueOf(videoId)).document(card));
+            }
+        } catch (Exception e) {
+            log.warn("Failed to index video {} in Elasticsearch: {}", videoId, e.getMessage());
+        }
+    }
+
+    public void removeVideo(Long videoId) {
+        ElasticsearchClient esClient = esClientProvider.getIfAvailable();
+        if (esClient == null || videoId == null) {
+            return;
+        }
+        try {
+            esClient.delete(d -> d.index(INDEX_NAME).id(String.valueOf(videoId)));
+        } catch (Exception e) {
+            log.debug("Failed to delete video {} from Elasticsearch: {}", videoId, e.getMessage());
+        }
+    }
+
+    @Scheduled(fixedDelay = 1_800_000L, initialDelay = 15_000L)
     public void syncElasticsearchIndex() {
         ElasticsearchClient esClient = esClientProvider.getIfAvailable();
         if (esClient == null) {
             return;
         }
         try {
+            ensureIndexExists(esClient);
             List<VideoCardVO> videos = videoMapper.selectApprovedCards(2000);
             if (videos.isEmpty()) {
                 return;
@@ -99,6 +135,14 @@ public class VideoSearchService {
             }
         } catch (Exception e) {
             log.warn("Elasticsearch periodic sync skipped: {}", e.getMessage());
+        }
+    }
+
+    private void ensureIndexExists(ElasticsearchClient esClient) throws Exception {
+        boolean exists = esClient.indices().exists(e -> e.index(INDEX_NAME)).value();
+        if (!exists) {
+            esClient.indices().create(c -> c.index(INDEX_NAME));
+            log.info("Created Elasticsearch index '{}'", INDEX_NAME);
         }
     }
 }

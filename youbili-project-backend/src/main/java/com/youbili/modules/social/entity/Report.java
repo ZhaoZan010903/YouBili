@@ -10,19 +10,19 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("report")
+@TableName("reports")
 public class Report {
 
-    @TableId(value = "reportID", type = IdType.AUTO)
+    @TableId(value = "report_id", type = IdType.AUTO)
     private Long reportId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("targetType")
+    @TableField("target_type")
     private String targetType;
 
-    @TableField("targetID")
+    @TableField("target_id")
     private Long targetId;
 
     @TableField("category")
@@ -37,9 +37,9 @@ public class Report {
     @TableField("status")
     private String status;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

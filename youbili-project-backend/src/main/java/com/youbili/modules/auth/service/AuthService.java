@@ -101,6 +101,10 @@ public class AuthService {
             throw new ServiceException(ServiceCode.CONFLICT, "该邮箱已被注册");
         }
 
+        if (!StringUtils.hasText(mailFrom)) {
+            throw new ServiceException(ServiceCode.MAIL_ERROR, "管理员暂未配置 SMTP 邮件服务，请联系管理员或使用演示账号登录");
+        }
+
         String code = String.format("%06d", SECURE_RANDOM.nextInt(1_000_000));
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(mailFrom);

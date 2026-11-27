@@ -11,10 +11,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("`user`")
+@TableName("users")
 public class User {
 
-    @TableId(value = "userID", type = IdType.AUTO)
+    @TableId(value = "user_id", type = IdType.AUTO)
     private Long userId;
 
     @TableField("username")
@@ -32,7 +32,7 @@ public class User {
     @TableField("birthday")
     private LocalDate birthday;
 
-    @TableField("accountLevel")
+    @TableField("account_level")
     private Integer accountLevel;
 
     @TableField("fans")
@@ -41,30 +41,30 @@ public class User {
     @TableField("follows")
     private Integer follows;
 
-    @TableField("videoCount")
+    @TableField("video_count")
     private Integer videoCount;
 
-    @TableField("totalLikes")
+    @TableField("total_likes")
     private Integer totalLikes;
 
-    @TableField("membershipStatus")
+    @TableField("membership_status")
     private String membershipStatus;
 
-    @TableField("registrationDate")
+    @TableField("registration_date")
     private LocalDateTime registrationDate;
 
-    @TableField("lastLoginDate")
+    @TableField("last_login_date")
     private LocalDateTime lastLoginDate;
 
-    @TableField("imgUrl")
+    @TableField("img_url")
     private String imgUrl;
 
     @TableField("enable")
     private Integer enable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

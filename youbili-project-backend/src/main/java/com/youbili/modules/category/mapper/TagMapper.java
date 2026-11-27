@@ -12,10 +12,10 @@ import java.util.List;
 public interface TagMapper extends BaseMapper<Tag> {
 
     @Select("""
-            SELECT t.tagID AS tagId, t.tagName AS tagName, t.description AS description
-            FROM tag t
-            INNER JOIN videotag vt ON t.tagID = vt.tagID
-            WHERE vt.videoID = #{videoId} AND vt.enable = 1 AND t.enable = 1
+            SELECT t.tag_id, t.tag_name, t.description
+            FROM tags t
+            INNER JOIN video_tags vt ON t.tag_id = vt.tag_id
+            WHERE vt.video_id = #{videoId} AND vt.enable = 1 AND t.enable = 1
             """)
     List<Tag> selectTagsByVideoId(@Param("videoId") Long videoId);
 }

@@ -21,12 +21,12 @@
 | 维度 | 旧版 (v1.0) | 新版 (v2.0) |
 | --- | --- | --- |
 | 运行时与框架 | JDK 17 + Spring Boot 3.1.0 | **JDK 21 LTS + Spring Boot 3.5.16** |
-| 持久层 | 混用 MyBatis + MyBatis-Plus 3.5.3 + PageHelper 1.4 | **统一 MyBatis-Plus SB3 Starter 3.5.18 + PaginationInnerInterceptor + Druid SB3** |
+| 持久层 | 混用 MyBatis + MyBatis-Plus 3.5.3 + PageHelper 1.4 | **PostgreSQL + 统一 MyBatis-Plus SB3 Starter 3.5.18 + PaginationInnerInterceptor + Druid SB3** |
 | 认证与安全 | JJWT 0.11 硬编码静态密钥 + 过时 `.and()` 配置 | **Spring Security 6.5 + JJWT 0.12.6 + Redis 登出吊销黑名单** |
 | API 文档 | Knife4j OpenAPI 2 (Swagger 2) | **Knife4j 4.5 + Springdoc 2.8 (OpenAPI 3 + Bearer JWT)** |
 | 推荐算法 | Apache Mahout 0.13 (Hadoop 2) + 有缺陷热度公式 | **纯 Java 余弦相似度 User-CF + 重力衰减热度模型 + 冷启动兜底** |
-| 存储与转码 | 硬编码 Windows 路径 + 3GB 重复 FFmpeg 依赖 + 硬编码 RocketMQ IP | **可插拔 Local/Aliyun OSS 存储 + 可选异步 FFmpeg CLI 转码** |
-| 搜索与弹幕 | ES 异常静默吞掉、强依赖全套中间件 | **ES 8 优先 + MySQL 自动降级；MongoDB 弹幕优先 + MySQL 自动降级** |
+| 存储与转码 | 硬编码 Windows 路径 + 3GB 重复 FFmpeg 依赖 + 硬编码 RocketMQ IP | **可插拔 Local（Nginx Range 流媒体）/ Aliyun OSS 存储 + 可选异步 FFmpeg CLI 转码** |
+| 搜索与弹幕 | ES 异常静默吞掉、强依赖全套中间件 | **ES 8 优先 + PostgreSQL 自动降级；MongoDB 弹幕优先 + PostgreSQL 自动降级** |
 
 ---
 
@@ -65,9 +65,9 @@
 
 ```text
 YouBili/
-├── docker-compose.yml            # 一键启动 MySQL 8.4 + Redis 7.4 + MongoDB 8.0
+├── docker-compose.yml            # 一键启动 PostgreSQL 16 + Redis 7.4 + MongoDB 8.0 + Elasticsearch 8
 ├── sql/
-│   └── youbili_schema.sql        # 规范化建表语句 + 默认分区/标签种子数据
+│   └── youbili_schema.sql        # PostgreSQL 规范化建表语句 + 默认分区/标签种子数据
 ├── docs/images/                  # 原项目系统架构图与数据库 E-R 图
 ├── youbili-project-backend/      # Spring Boot 3.5 + Java 21 后端
 │   ├── pom.xml
@@ -92,7 +92,7 @@ YouBili/
 
 ## 四、快速启动
 
-### 1. 启动基础设施（MySQL + Redis + MongoDB）
+### 1. 启动基础设施（PostgreSQL + Redis + MongoDB + Elasticsearch）
 ```bash
 docker compose up -d
 ```

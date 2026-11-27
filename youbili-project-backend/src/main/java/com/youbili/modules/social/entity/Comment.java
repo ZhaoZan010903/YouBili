@@ -10,36 +10,36 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("comment")
+@TableName("comments")
 public class Comment {
 
-    @TableId(value = "commentID", type = IdType.AUTO)
+    @TableId(value = "comment_id", type = IdType.AUTO)
     private Long commentId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("videoID")
+    @TableField("video_id")
     private Long videoId;
 
-    @TableField("commentText")
+    @TableField("comment_text")
     private String commentText;
 
-    @TableField("commentDate")
+    @TableField("comment_date")
     private LocalDateTime commentDate;
 
-    @TableField("likeCount")
+    @TableField("like_count")
     private Integer likeCount;
 
-    @TableField("dislikeCount")
+    @TableField("dislike_count")
     private Integer dislikeCount;
 
     @TableField("enable")
     private Integer enable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

@@ -10,25 +10,25 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("barrage")
+@TableName("barrages")
 public class BarrageRecord {
 
-    @TableId(value = "barrageID", type = IdType.AUTO)
+    @TableId(value = "barrage_id", type = IdType.AUTO)
     private Long barrageId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("videoID")
+    @TableField("video_id")
     private Long videoId;
 
     @TableField("enable")
     private Integer enable;
 
-    @TableField("barrageText")
+    @TableField("barrage_text")
     private String barrageText;
 
-    @TableField("barrageTime")
+    @TableField("barrage_time")
     private Float barrageTime;
 
     @TableField("color")
@@ -37,6 +37,6 @@ public class BarrageRecord {
     @TableField("type")
     private String type;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 }

@@ -4,46 +4,46 @@
 <mapper namespace="com.youbili.modules.social.mapper.CommentMapper">
 
     <select id="selectTopComments" resultType="com.youbili.modules.social.vo.CommentVO">
-        SELECT c.commentID    AS commentId,
-               c.userID       AS userId,
-               u.nickname     AS nickname,
-               u.imgUrl       AS avatarUrl,
-               c.commentText  AS commentText,
-               c.likeCount    AS likeCount,
-               c.dislikeCount AS dislikeCount,
-               c.gmtCreate    AS gmtCreate
-        FROM comment c
-                 LEFT JOIN `user` u ON c.userID = u.userID
-        WHERE c.videoID = #{videoId}
+        SELECT c.comment_id    AS comment_id,
+               c.user_id       AS user_id,
+               u.nickname      AS nickname,
+               u.img_url       AS avatar_url,
+               c.comment_text  AS comment_text,
+               c.like_count    AS like_count,
+               c.dislike_count AS dislike_count,
+               c.gmt_create    AS gmt_create
+        FROM comments c
+                 LEFT JOIN users u ON c.user_id = u.user_id
+        WHERE c.video_id = #{videoId}
           AND c.enable = 1
         <choose>
-            <when test="sort == 'latest'">ORDER BY c.gmtCreate DESC, c.commentID DESC</when>
-            <otherwise>ORDER BY c.likeCount DESC, c.gmtCreate DESC</otherwise>
+            <when test="sort == 'latest'">ORDER BY c.gmt_create DESC, c.comment_id DESC</when>
+            <otherwise>ORDER BY c.like_count DESC, c.gmt_create DESC</otherwise>
         </choose>
     </select>
 
     <select id="selectRepliesByCommentIds" resultType="com.youbili.modules.social.vo.CommentReplyVO">
-        SELECT r.replyID       AS replyId,
-               r.commentID     AS commentId,
-               r.parentReplyID AS parentReplyId,
-               r.userID        AS userId,
-               u.nickname      AS nickname,
-               u.imgUrl        AS avatarUrl,
-               u2.nickname     AS replyToNickname,
-               r.replyText     AS replyText,
-               r.likeCount     AS likeCount,
-               r.dislikeCount  AS dislikeCount,
-               r.gmtCreate     AS gmtCreate
-        FROM commentreplie r
-                 LEFT JOIN `user` u ON r.userID = u.userID
-                 LEFT JOIN commentreplie r2 ON r.parentReplyID = r2.replyID
-                 LEFT JOIN `user` u2 ON r2.userID = u2.userID
+        SELECT r.reply_id        AS reply_id,
+               r.comment_id      AS comment_id,
+               r.parent_reply_id AS parent_reply_id,
+               r.user_id         AS user_id,
+               u.nickname        AS nickname,
+               u.img_url         AS avatar_url,
+               u2.nickname       AS reply_to_nickname,
+               r.reply_text      AS reply_text,
+               r.like_count      AS like_count,
+               r.dislike_count   AS dislike_count,
+               r.gmt_create      AS gmt_create
+        FROM comment_replies r
+                 LEFT JOIN users u ON r.user_id = u.user_id
+                 LEFT JOIN comment_replies r2 ON r.parent_reply_id = r2.reply_id
+                 LEFT JOIN users u2 ON r2.user_id = u2.user_id
         WHERE r.enable = 1
-          AND r.commentID IN
+          AND r.comment_id IN
         <foreach collection="commentIds" item="cid" open="(" separator="," close=")">
             #{cid}
         </foreach>
-        ORDER BY r.gmtCreate ASC, r.replyID ASC
+        ORDER BY r.gmt_create ASC, r.reply_id ASC
     </select>
 
 </mapper>

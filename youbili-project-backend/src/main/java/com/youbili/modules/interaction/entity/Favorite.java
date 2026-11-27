@@ -10,27 +10,27 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("favorite")
+@TableName("favorites")
 public class Favorite {
 
-    @TableId(value = "favoriteID", type = IdType.AUTO)
+    @TableId(value = "favorite_id", type = IdType.AUTO)
     private Long favoriteId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("videoID")
+    @TableField("video_id")
     private Long videoId;
 
-    @TableField("favoriteDate")
+    @TableField("favorite_date")
     private LocalDateTime favoriteDate;
 
     @TableField("enable")
     private Integer enable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

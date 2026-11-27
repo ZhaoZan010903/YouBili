@@ -17,6 +17,6 @@ public interface HistoryMapper extends BaseMapper<WatchHistory> {
 
     List<VideoCardVO> selectRecentHistoryCards(@Param("userId") Long userId, @Param("limit") int limit);
 
-    @Update("UPDATE history SET enable = 0 WHERE userID = #{userId} AND enable = 1")
+    @Update("UPDATE watch_history SET enable = 0 WHERE user_id = #{userId} AND enable = 1")
     int clearAllByUserId(@Param("userId") Long userId);
 }

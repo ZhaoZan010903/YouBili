@@ -8,21 +8,21 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("videotag")
+@TableName("video_tags")
 public class VideoTag {
 
-    @TableField("videoID")
+    @TableField("video_id")
     private Long videoId;
 
-    @TableField("tagID")
+    @TableField("tag_id")
     private Long tagId;
 
     @TableField("enable")
     private Integer enable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

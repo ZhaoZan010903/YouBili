@@ -13,15 +13,18 @@ spring:
     location: classpath:static/banner.txt
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:youbili}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
-    username: ${DB_USERNAME:root}
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:youbili}
+    username: ${DB_USERNAME:youbili}
     password: ${DB_PASSWORD:youbili123}
     druid:
-      initial-size: 5
-      min-idle: 5
+      initial-size: 3
+      min-idle: 3
       max-active: 20
       max-wait: 60000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -53,7 +56,7 @@ spring:
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   configuration:
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
 management:
@@ -68,6 +71,8 @@ youbili:
       - http://localhost:5173
       - http://localhost:8100
       - http://127.0.0.1:5173
+      - http://152.136.252.204
+      - http://152.136.252.204:5179
   jwt:
     # 生产环境务必通过环境变量 YOUBILI_JWT_SECRET 覆盖（至少 32 字节）
     secret-key: ${YOUBILI_JWT_SECRET:YouBili2026SecureJwtSigningKeyPleaseOverrideInProduction!}
@@ -76,7 +81,7 @@ youbili:
     # local | oss
     type: ${YOUBILI_STORAGE_TYPE:local}
     local-dir: ${YOUBILI_UPLOAD_DIR:./uploads}
-    public-base-url: ${YOUBILI_PUBLIC_BASE_URL:http://localhost:10001/uploads}
+    public-base-url: ${YOUBILI_PUBLIC_BASE_URL:/uploads}
     oss:
       endpoint: ${ALIYUN_OSS_ENDPOINT:oss-cn-beijing.aliyuncs.com}
       access-key-id: ${ALIYUN_OSS_ACCESS_KEY_ID:}
@@ -88,7 +93,7 @@ youbili:
     enabled: ${YOUBILI_TRANSCODE_ENABLED:false}
     ffmpeg-path: ${FFMPEG_PATH:ffmpeg}
   elasticsearch:
-    enabled: ${YOUBILI_ES_ENABLED:false}
+    enabled: ${YOUBILI_ES_ENABLED:true}
     host: ${ES_HOST:localhost}
     port: ${ES_PORT:9200}
     scheme: ${ES_SCHEME:http}

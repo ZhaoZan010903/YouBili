@@ -10,36 +10,36 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("notice")
+@TableName("notices")
 public class Notice {
 
-    @TableId(value = "noticeID", type = IdType.AUTO)
+    @TableId(value = "notice_id", type = IdType.AUTO)
     private Long noticeId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("systemName")
+    @TableField("system_name")
     private String systemName;
 
     /**
      * 0 = 系统公告, 1 = 个人消息
      */
-    @TableField("typeEnable")
+    @TableField("type_enable")
     private Integer typeEnable;
 
-    @TableField("isRead")
+    @TableField("is_read")
     private Integer isRead;
 
-    @TableField("noticeText")
+    @TableField("notice_text")
     private String noticeText;
 
-    @TableField("noticeTime")
+    @TableField("notice_time")
     private LocalDateTime noticeTime;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

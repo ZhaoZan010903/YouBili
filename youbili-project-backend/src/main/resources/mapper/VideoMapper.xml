@@ -4,37 +4,37 @@
 <mapper namespace="com.youbili.modules.video.mapper.VideoMapper">
 
     <sql id="VideoCardColumns">
-        v.videoID                                  AS videoId,
-        v.userID                                   AS userId,
-        v.title                                    AS title,
-        v.description                              AS description,
-        TIME_FORMAT(v.duration, '%H:%i:%s')        AS duration,
-        v.uploadDate                               AS uploadDate,
-        v.videoSrcUrl                              AS videoSrcUrl,
-        v.videoImgUrl                              AS videoImgUrl,
-        u.nickname                                 AS authorNickname,
-        u.imgUrl                                   AS authorAvatarUrl,
-        c.categoryID                               AS categoryId,
-        c.categoryName                             AS categoryName,
-        v.viewCount                                AS viewCount,
-        v.likeCount                                AS likeCount,
-        v.favoriteCount                            AS favoriteCount,
-        v.barrageCount                             AS barrageCount,
-        v.commentCount                             AS commentCount,
-        v.reviewStatus                             AS reviewStatus
+        v.video_id                                                AS video_id,
+        v.user_id                                                 AS user_id,
+        v.title                                                   AS title,
+        v.description                                             AS description,
+        COALESCE(TO_CHAR(v.duration, 'HH24:MI:SS'), '00:00:00')   AS duration,
+        v.upload_date                                             AS upload_date,
+        v.video_src_url                                           AS video_src_url,
+        v.video_img_url                                           AS video_img_url,
+        u.nickname                                                AS author_nickname,
+        u.img_url                                                 AS author_avatar_url,
+        c.category_id                                             AS category_id,
+        c.category_name                                           AS category_name,
+        v.view_count                                              AS view_count,
+        v.like_count                                              AS like_count,
+        v.favorite_count                                          AS favorite_count,
+        v.barrage_count                                           AS barrage_count,
+        v.comment_count                                           AS comment_count,
+        v.review_status                                           AS review_status
     </sql>
 
     <sql id="VideoCardJoins">
-        FROM video v
-        INNER JOIN `user` u ON v.userID = u.userID
-        LEFT JOIN videocategory vc ON v.videoID = vc.videoID AND vc.enable = 1
-        LEFT JOIN categorie c ON vc.categoryID = c.categoryID
+        FROM videos v
+        INNER JOIN users u ON v.user_id = u.user_id
+        LEFT JOIN video_categories vc ON v.video_id = vc.video_id AND vc.enable = 1
+        LEFT JOIN categories c ON vc.category_id = c.category_id
     </sql>
 
     <select id="selectVideoCardById" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        WHERE v.videoID = #{videoId}
+        WHERE v.video_id = #{videoId}
           AND v.enable = 1
         LIMIT 1
     </select>
@@ -42,18 +42,18 @@
     <select id="selectApprovedCards" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        WHERE v.reviewStatus = 'Approved'
+        WHERE v.review_status = 'Approved'
           AND v.enable = 1
-        ORDER BY v.uploadDate DESC
+        ORDER BY v.upload_date DESC
         LIMIT #{limit}
     </select>
 
     <select id="selectCardsByIds" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        WHERE v.reviewStatus = 'Approved'
+        WHERE v.review_status = 'Approved'
           AND v.enable = 1
-          AND v.videoID IN
+          AND v.video_id IN
         <foreach collection="videoIds" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -62,77 +62,78 @@
     <select id="selectCategoryVideos" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        WHERE v.reviewStatus = 'Approved'
+        WHERE v.review_status = 'Approved'
           AND v.enable = 1
         <if test="categoryId != null and categoryId > 0">
-            AND vc.categoryID = #{categoryId}
+            AND vc.category_id = #{categoryId}
         </if>
         <choose>
-            <when test="sort == 'views'">ORDER BY v.viewCount DESC, v.uploadDate DESC</when>
-            <when test="sort == 'likes'">ORDER BY v.likeCount DESC, v.uploadDate DESC</when>
-            <otherwise>ORDER BY v.uploadDate DESC</otherwise>
+            <when test="sort == 'views'">ORDER BY v.view_count DESC, v.upload_date DESC</when>
+            <when test="sort == 'likes'">ORDER BY v.like_count DESC, v.upload_date DESC</when>
+            <otherwise>ORDER BY v.upload_date DESC</otherwise>
         </choose>
     </select>
 
     <select id="selectUserVideos" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        WHERE v.userID = #{userId}
+        WHERE v.user_id = #{userId}
           AND v.enable = 1
         <if test="onlyApproved">
-            AND v.reviewStatus = 'Approved'
+            AND v.review_status = 'Approved'
         </if>
         <if test="reviewStatus != null and reviewStatus != ''">
-            AND v.reviewStatus = #{reviewStatus}
+            AND v.review_status = #{reviewStatus}
         </if>
-        ORDER BY v.uploadDate DESC
+        ORDER BY v.upload_date DESC
     </select>
 
     <select id="searchVideosByKeyword" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        WHERE v.reviewStatus = 'Approved'
+        WHERE v.review_status = 'Approved'
           AND v.enable = 1
         <if test="keyword != null and keyword != ''">
-            AND (v.title LIKE CONCAT('%', #{keyword}, '%')
-                 OR v.description LIKE CONCAT('%', #{keyword}, '%')
-                 OR u.nickname LIKE CONCAT('%', #{keyword}, '%'))
+            AND (v.title ILIKE '%' || #{keyword} || '%'
+                 OR v.description ILIKE '%' || #{keyword} || '%'
+                 OR u.nickname ILIKE '%' || #{keyword} || '%')
         </if>
         <choose>
-            <when test="sort == 'views'">ORDER BY v.viewCount DESC, v.uploadDate DESC</when>
-            <when test="sort == 'likes'">ORDER BY v.likeCount DESC, v.uploadDate DESC</when>
-            <otherwise>ORDER BY v.uploadDate DESC</otherwise>
+            <when test="sort == 'views'">ORDER BY v.view_count DESC, v.upload_date DESC</when>
+            <when test="sort == 'likes'">ORDER BY v.like_count DESC, v.upload_date DESC</when>
+            <otherwise>ORDER BY v.upload_date DESC</otherwise>
         </choose>
     </select>
 
     <select id="suggestTitles" resultType="java.lang.String">
-        SELECT DISTINCT v.title
-        FROM video v
-        WHERE v.reviewStatus = 'Approved'
+        SELECT v.title
+        FROM videos v
+        WHERE v.review_status = 'Approved'
           AND v.enable = 1
-          AND v.title LIKE CONCAT('%', #{keyword}, '%')
-        ORDER BY v.viewCount DESC
+          AND v.title ILIKE '%' || #{keyword} || '%'
+        GROUP BY v.title
+        ORDER BY MAX(v.view_count) DESC
         LIMIT #{limit}
     </select>
 
     <select id="selectDynamicFeed" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        INNER JOIN follow f ON f.followedID = v.userID AND f.followerID = #{userId} AND f.enable = 1
-        WHERE v.reviewStatus = 'Approved'
+        INNER JOIN follows f ON f.followed_id = v.user_id AND f.follower_id = #{userId} AND f.enable = 1
+        WHERE v.review_status = 'Approved'
           AND v.enable = 1
-        ORDER BY v.uploadDate DESC
+        ORDER BY v.upload_date DESC
     </select>
 
     <select id="selectRecentApprovedForHeat" resultType="com.youbili.modules.video.vo.VideoCardVO">
         SELECT <include refid="VideoCardColumns"/>
         <include refid="VideoCardJoins"/>
-        WHERE v.reviewStatus = 'Approved'
+        WHERE v.review_status = 'Approved'
           AND v.enable = 1
         <if test="days > 0">
-            AND v.uploadDate >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+            AND v.upload_date >= NOW() - (#{days} * INTERVAL '1 day')
         </if>
-        ORDER BY v.uploadDate DESC
+        ORDER BY v.upload_date DESC
         LIMIT #{limit}
     </select>
 

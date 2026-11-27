@@ -39,21 +39,21 @@ public interface VideoMapper extends BaseMapper<Video> {
 
     List<VideoCardVO> selectRecentApprovedForHeat(@Param("days") int days, @Param("limit") int limit);
 
-    @Update("UPDATE video SET viewCount = viewCount + 1 WHERE videoID = #{videoId}")
+    @Update("UPDATE videos SET view_count = view_count + 1 WHERE video_id = #{videoId}")
     int incrementViewCount(@Param("videoId") Long videoId);
 
-    @Update("UPDATE video SET likeCount = GREATEST(0, likeCount + #{delta}) WHERE videoID = #{videoId}")
+    @Update("UPDATE videos SET like_count = GREATEST(0, like_count + #{delta}) WHERE video_id = #{videoId}")
     int adjustLikeCount(@Param("videoId") Long videoId, @Param("delta") int delta);
 
-    @Update("UPDATE video SET dislikeCount = GREATEST(0, dislikeCount + #{delta}) WHERE videoID = #{videoId}")
+    @Update("UPDATE videos SET dislike_count = GREATEST(0, dislike_count + #{delta}) WHERE video_id = #{videoId}")
     int adjustDislikeCount(@Param("videoId") Long videoId, @Param("delta") int delta);
 
-    @Update("UPDATE video SET favoriteCount = GREATEST(0, favoriteCount + #{delta}) WHERE videoID = #{videoId}")
+    @Update("UPDATE videos SET favorite_count = GREATEST(0, favorite_count + #{delta}) WHERE video_id = #{videoId}")
     int adjustFavoriteCount(@Param("videoId") Long videoId, @Param("delta") int delta);
 
-    @Update("UPDATE video SET barrageCount = GREATEST(0, barrageCount + #{delta}) WHERE videoID = #{videoId}")
+    @Update("UPDATE videos SET barrage_count = GREATEST(0, barrage_count + #{delta}) WHERE video_id = #{videoId}")
     int adjustBarrageCount(@Param("videoId") Long videoId, @Param("delta") int delta);
 
-    @Update("UPDATE video SET commentCount = GREATEST(0, commentCount + #{delta}) WHERE videoID = #{videoId}")
+    @Update("UPDATE videos SET comment_count = GREATEST(0, comment_count + #{delta}) WHERE video_id = #{videoId}")
     int adjustCommentCount(@Param("videoId") Long videoId, @Param("delta") int delta);
 }

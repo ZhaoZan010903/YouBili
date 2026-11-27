@@ -14,16 +14,16 @@ import java.time.LocalDateTime;
 @TableName("orders")
 public class Order {
 
-    @TableId(value = "orderID", type = IdType.AUTO)
+    @TableId(value = "order_id", type = IdType.AUTO)
     private Long orderId;
 
-    @TableField("tradeName")
+    @TableField("trade_name")
     private String tradeName;
 
-    @TableField("orderNumber")
+    @TableField("order_number")
     private String orderNumber;
 
-    @TableField("zfbNumber")
+    @TableField("zfb_number")
     private String zfbNumber;
 
     @TableField("price")
@@ -32,18 +32,18 @@ public class Order {
     @TableField("payment")
     private String payment;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("payTime")
+    @TableField("pay_time")
     private LocalDateTime payTime;
 
-    @TableField("enable")
+    @TableField("status")
     private String status;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

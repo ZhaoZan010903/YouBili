@@ -48,7 +48,7 @@ public class BarrageService {
                                 .build())
                         .toList();
             } catch (Exception e) {
-                log.warn("MongoDB unavailable for barrage query, falling back to MySQL: {}", e.getMessage());
+                log.warn("MongoDB unavailable for barrage query, falling back to PostgreSQL: {}", e.getMessage());
             }
         }
         return barrageMapper.selectList(
@@ -85,7 +85,7 @@ public class BarrageService {
                 mongoTemplate.save(doc);
                 savedToMongo = true;
             } catch (Exception e) {
-                log.warn("MongoDB unavailable while saving barrage, falling back to MySQL: {}", e.getMessage());
+                log.warn("MongoDB unavailable while saving barrage, falling back to PostgreSQL: {}", e.getMessage());
             }
         }
 

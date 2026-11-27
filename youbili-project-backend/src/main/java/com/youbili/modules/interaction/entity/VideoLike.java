@@ -10,19 +10,19 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("likes")
+@TableName("video_likes")
 public class VideoLike {
 
-    @TableId(value = "likeID", type = IdType.AUTO)
+    @TableId(value = "like_id", type = IdType.AUTO)
     private Long likeId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("videoID")
+    @TableField("video_id")
     private Long videoId;
 
-    @TableField("likeDate")
+    @TableField("like_date")
     private LocalDateTime likeDate;
 
     @TableField("enable")
@@ -31,12 +31,12 @@ public class VideoLike {
     /**
      * 1 = 点赞, 0 = 点踩
      */
-    @TableField("typeEnable")
+    @TableField("type_enable")
     private Integer typeEnable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

@@ -4,55 +4,55 @@
 <mapper namespace="com.youbili.modules.interaction.mapper.HistoryMapper">
 
     <select id="selectHistoryList" resultType="com.youbili.modules.interaction.vo.HistoryItemVO">
-        SELECT h.historyID                               AS historyId,
-               v.videoID                                 AS videoId,
-               v.title                                   AS title,
-               v.videoImgUrl                             AS videoImgUrl,
-               TIME_FORMAT(v.duration, '%H:%i:%s')       AS duration,
-               u.userID                                  AS authorId,
-               u.nickname                                AS authorNickname,
-               u.imgUrl                                  AS authorAvatarUrl,
-               v.viewCount                               AS viewCount,
-               TIME_FORMAT(h.watchDuration, '%H:%i:%s')  AS watchDuration,
-               h.watchDate                               AS watchDate
-        FROM history h
-                 INNER JOIN video v ON h.videoID = v.videoID AND v.enable = 1
-                 INNER JOIN `user` u ON v.userID = u.userID
-        WHERE h.userID = #{userId}
+        SELECT h.history_id                                                    AS history_id,
+               v.video_id                                                      AS video_id,
+               v.title                                                         AS title,
+               v.video_img_url                                                 AS video_img_url,
+               COALESCE(TO_CHAR(v.duration, 'HH24:MI:SS'), '00:00:00')         AS duration,
+               u.user_id                                                       AS author_id,
+               u.nickname                                                      AS author_nickname,
+               u.img_url                                                       AS author_avatar_url,
+               v.view_count                                                    AS view_count,
+               COALESCE(TO_CHAR(h.watch_duration, 'HH24:MI:SS'), '00:00:00')   AS watch_duration,
+               h.watch_date                                                    AS watch_date
+        FROM watch_history h
+                 INNER JOIN videos v ON h.video_id = v.video_id AND v.enable = 1
+                 INNER JOIN users u ON v.user_id = u.user_id
+        WHERE h.user_id = #{userId}
           AND h.enable = 1
         <if test="keyword != null and keyword != ''">
-            AND (v.title LIKE CONCAT('%', #{keyword}, '%') OR u.nickname LIKE CONCAT('%', #{keyword}, '%'))
+            AND (v.title ILIKE '%' || #{keyword} || '%' OR u.nickname ILIKE '%' || #{keyword} || '%')
         </if>
-        ORDER BY h.watchDate DESC
+        ORDER BY h.watch_date DESC
     </select>
 
     <select id="selectRecentHistoryCards" resultType="com.youbili.modules.video.vo.VideoCardVO">
-        SELECT v.videoID                            AS videoId,
-               v.userID                             AS userId,
-               v.title                              AS title,
-               v.description                        AS description,
-               TIME_FORMAT(v.duration, '%H:%i:%s')  AS duration,
-               v.uploadDate                         AS uploadDate,
-               v.videoSrcUrl                        AS videoSrcUrl,
-               v.videoImgUrl                        AS videoImgUrl,
-               u.nickname                           AS authorNickname,
-               u.imgUrl                             AS authorAvatarUrl,
-               c.categoryID                         AS categoryId,
-               c.categoryName                       AS categoryName,
-               v.viewCount                          AS viewCount,
-               v.likeCount                          AS likeCount,
-               v.favoriteCount                      AS favoriteCount,
-               v.barrageCount                       AS barrageCount,
-               v.commentCount                       AS commentCount,
-               v.reviewStatus                       AS reviewStatus
-        FROM history h
-                 INNER JOIN video v ON h.videoID = v.videoID AND v.enable = 1
-                 INNER JOIN `user` u ON v.userID = u.userID
-                 LEFT JOIN videocategory vc ON v.videoID = vc.videoID AND vc.enable = 1
-                 LEFT JOIN categorie c ON vc.categoryID = c.categoryID
-        WHERE h.userID = #{userId}
+        SELECT v.video_id                                                AS video_id,
+               v.user_id                                                 AS user_id,
+               v.title                                                   AS title,
+               v.description                                             AS description,
+               COALESCE(TO_CHAR(v.duration, 'HH24:MI:SS'), '00:00:00')   AS duration,
+               v.upload_date                                             AS upload_date,
+               v.video_src_url                                           AS video_src_url,
+               v.video_img_url                                           AS video_img_url,
+               u.nickname                                                AS author_nickname,
+               u.img_url                                                 AS author_avatar_url,
+               c.category_id                                             AS category_id,
+               c.category_name                                           AS category_name,
+               v.view_count                                              AS view_count,
+               v.like_count                                              AS like_count,
+               v.favorite_count                                          AS favorite_count,
+               v.barrage_count                                           AS barrage_count,
+               v.comment_count                                           AS comment_count,
+               v.review_status                                           AS review_status
+        FROM watch_history h
+                 INNER JOIN videos v ON h.video_id = v.video_id AND v.enable = 1
+                 INNER JOIN users u ON v.user_id = u.user_id
+                 LEFT JOIN video_categories vc ON v.video_id = vc.video_id AND vc.enable = 1
+                 LEFT JOIN categories c ON vc.category_id = c.category_id
+        WHERE h.user_id = #{userId}
           AND h.enable = 1
-        ORDER BY h.watchDate DESC
+        ORDER BY h.watch_date DESC
         LIMIT #{limit}
     </select>
 

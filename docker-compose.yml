@@ -1,18 +1,18 @@
 services:
-  mysql:
-    image: mysql:8.4
-    container_name: youbili-mysql
+  postgres:
+    image: postgres:16-alpine
+    container_name: youbili-postgres
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-youbili123}
-      MYSQL_DATABASE: youbili
+      POSTGRES_DB: youbili
+      POSTGRES_USER: ${DB_USERNAME:-youbili}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-youbili123}
       TZ: Asia/Shanghai
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
       - ./sql/youbili_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
   redis:
     image: redis:7.4-alpine
@@ -34,7 +34,21 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+    container_name: youbili-es
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: "-Xms256m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
 volumes:
-  mysql_data:
+  postgres_data:
   redis_data:
   mongo_data:
+  es_data:

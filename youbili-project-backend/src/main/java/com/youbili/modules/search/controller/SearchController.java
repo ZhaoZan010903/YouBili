@@ -22,7 +22,7 @@ public class SearchController {
 
     private final VideoSearchService videoSearchService;
 
-    @Operation(summary = "按关键词搜索视频（ES 优先，自动降级 MySQL）")
+    @Operation(summary = "按关键词搜索视频（ES 优先，自动降级 PostgreSQL）")
     @GetMapping("/videos")
     public ApiResponse<PageResult<VideoCardVO>> searchVideos(
             @RequestParam(defaultValue = "") String keyword,

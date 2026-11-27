@@ -11,30 +11,30 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
-@TableName("history")
+@TableName("watch_history")
 public class WatchHistory {
 
-    @TableId(value = "historyID", type = IdType.AUTO)
+    @TableId(value = "history_id", type = IdType.AUTO)
     private Long historyId;
 
-    @TableField("userID")
+    @TableField("user_id")
     private Long userId;
 
-    @TableField("videoID")
+    @TableField("video_id")
     private Long videoId;
 
-    @TableField("watchDate")
+    @TableField("watch_date")
     private LocalDateTime watchDate;
 
-    @TableField("watchDuration")
+    @TableField("watch_duration")
     private LocalTime watchDuration;
 
     @TableField("enable")
     private Integer enable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

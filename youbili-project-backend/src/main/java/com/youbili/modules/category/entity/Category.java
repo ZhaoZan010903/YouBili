@@ -10,13 +10,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("categorie")
+@TableName("categories")
 public class Category {
 
-    @TableId(value = "categoryID", type = IdType.AUTO)
+    @TableId(value = "category_id", type = IdType.AUTO)
     private Long categoryId;
 
-    @TableField("categoryName")
+    @TableField("category_name")
     private String categoryName;
 
     @TableField("description")
@@ -25,9 +25,9 @@ public class Category {
     @TableField("enable")
     private Integer enable;
 
-    @TableField(value = "gmtCreate", fill = FieldFill.INSERT)
+    @TableField(value = "gmt_create", fill = FieldFill.INSERT)
     private LocalDateTime gmtCreate;
 
-    @TableField(value = "gmtModified", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime gmtModified;
 }

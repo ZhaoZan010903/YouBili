@@ -17,6 +17,7 @@ import com.youbili.modules.interaction.entity.Favorite;
 import com.youbili.modules.interaction.entity.VideoLike;
 import com.youbili.modules.interaction.mapper.FavoriteMapper;
 import com.youbili.modules.interaction.mapper.LikeMapper;
+import com.youbili.modules.search.service.VideoSearchService;
 import com.youbili.modules.user.entity.Follow;
 import com.youbili.modules.user.entity.User;
 import com.youbili.modules.user.mapper.FollowMapper;
@@ -53,6 +54,7 @@ public class VideoService {
     private final FollowMapper followMapper;
     private final VideoTranscodeService videoTranscodeService;
     private final StorageProperties storageProperties;
+    private final VideoSearchService videoSearchService;
 
     public VideoDetailVO getVideoDetail(Long videoId, Long currentUserId) {
         VideoCardVO card = videoMapper.selectVideoCardById(videoId);
@@ -188,6 +190,7 @@ public class VideoService {
             videoTranscodeService.transcodeIfEnabled(videoId, localPath);
         }
 
+        videoSearchService.syncVideo(videoId);
         return videoId;
     }
 
@@ -228,6 +231,7 @@ public class VideoService {
                 videoTagMapper.insert(vt);
             });
         }
+        videoSearchService.syncVideo(videoId);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -242,6 +246,7 @@ public class VideoService {
         video.setEnable(0);
         videoMapper.updateById(video);
         userMapper.adjustVideoCount(currentUserId, -1);
+        videoSearchService.removeVideo(videoId);
     }
 
     private List<VideoDetailVO.QualityOptionVO> buildQualityOptions(String videoSrcUrl) {

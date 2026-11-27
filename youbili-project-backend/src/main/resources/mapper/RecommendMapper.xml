@@ -4,23 +4,23 @@
 <mapper namespace="com.youbili.modules.recommend.mapper.RecommendMapper">
 
     <select id="selectAggregatedUserBehaviors" resultType="com.youbili.modules.recommend.entity.UserBehaviorScore">
-        SELECT userID AS userId,
-               videoID AS videoId,
+        SELECT user_id     AS user_id,
+               video_id    AS video_id,
                SUM(weight) AS score
         FROM (
-            SELECT userID, videoID, 1.0 AS weight
-            FROM history
+            SELECT user_id, video_id, 1.0 AS weight
+            FROM watch_history
             WHERE enable = 1
             UNION ALL
-            SELECT userID, videoID, CASE WHEN typeEnable = 1 THEN 3.0 ELSE -3.0 END AS weight
-            FROM likes
+            SELECT user_id, video_id, CASE WHEN type_enable = 1 THEN 3.0 ELSE -3.0 END AS weight
+            FROM video_likes
             WHERE enable = 1
             UNION ALL
-            SELECT userID, videoID, 5.0 AS weight
-            FROM favorite
+            SELECT user_id, video_id, 5.0 AS weight
+            FROM favorites
             WHERE enable = 1
         ) AS combined
-        GROUP BY userID, videoID
+        GROUP BY user_id, video_id
         LIMIT #{limit}
     </select>
 

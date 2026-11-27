@@ -65,10 +65,10 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Database: MySQL + Druid + MyBatis-Plus (Spring Boot 3 Starter) -->
+        <!-- Database: PostgreSQL + Druid + MyBatis-Plus (Spring Boot 3 Starter) -->
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
