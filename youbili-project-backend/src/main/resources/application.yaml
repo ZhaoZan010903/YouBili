@@ -1,63 +1,107 @@
-#端口号
 server:
-  port: 10001
-  # Servlet（Java用于处理请求的组件）的配置
+  port: ${SERVER_PORT:10001}
   servlet:
-    # 编码配置
     encoding:
-      # 强制使用指定的编码
       force: true
-      # 字符集
       charset: UTF-8
 
 spring:
-  profiles:
-    active: public
+  application:
+    name: youbili-backend
   banner:
     charset: UTF-8
-    location: static/banner.txt
+    location: classpath:static/banner.txt
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:youbili}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:youbili123}
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DB:0}
+      timeout: 5s
+    mongodb:
+      uri: ${MONGO_URI:mongodb://localhost:27017/youbili}
+  mail:
+    host: ${MAIL_HOST:smtp.qq.com}
+    port: ${MAIL_PORT:465}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
   servlet:
     multipart:
       max-file-size: 500MB
-      max-request-size: 500MB
-
-
-    youbili:
-      jwt:
-        # JWT的有效时长，以分钟为单位
-        duration-in-minute: 86400L
-        # JWT的secretKey
-        secret-key: fNesMDkqrJFdsfDSwAbFLJ8SnsHJ438AF72D73aKJSmfdsafdLKKAFKDSJ
-        # 分页
-      dao:
-        default-query-page-size: 5
-
-
-
-  #设置静态资源文件夹
-  web:
-    resources:
-      static-locations: file:c:/files,classpath:static
-
-# mybatis
-#mybatis:
-#  mapper-locations: classpath:mapper/*.xml
-#  configuration:
-#    map-underscore-to-camel-case: true   # 配置表字段名和属性名规范不一致时自动匹配
-
+      max-request-size: 512MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
 
 mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: false
-  mapper-locations: classpath:mapper/**/*.xml
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+youbili:
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+      - http://localhost:8100
+      - http://127.0.0.1:5173
+  jwt:
+    # 生产环境务必通过环境变量 YOUBILI_JWT_SECRET 覆盖（至少 32 字节）
+    secret-key: ${YOUBILI_JWT_SECRET:YouBili2026SecureJwtSigningKeyPleaseOverrideInProduction!}
+    expiration-minutes: ${YOUBILI_JWT_EXPIRATION_MINUTES:10080}
+  storage:
+    # local | oss
+    type: ${YOUBILI_STORAGE_TYPE:local}
+    local-dir: ${YOUBILI_UPLOAD_DIR:./uploads}
+    public-base-url: ${YOUBILI_PUBLIC_BASE_URL:http://localhost:10001/uploads}
+    oss:
+      endpoint: ${ALIYUN_OSS_ENDPOINT:oss-cn-beijing.aliyuncs.com}
+      access-key-id: ${ALIYUN_OSS_ACCESS_KEY_ID:}
+      access-key-secret: ${ALIYUN_OSS_ACCESS_KEY_SECRET:}
+      video-bucket: ${ALIYUN_OSS_VIDEO_BUCKET:youbili-video}
+      image-bucket: ${ALIYUN_OSS_IMAGE_BUCKET:youbili-image}
+  transcode:
+    # 开启后上传 MP4 时将尝试调用本机 ffmpeg 生成多清晰度文件
+    enabled: ${YOUBILI_TRANSCODE_ENABLED:false}
+    ffmpeg-path: ${FFMPEG_PATH:ffmpeg}
+  elasticsearch:
+    enabled: ${YOUBILI_ES_ENABLED:false}
+    host: ${ES_HOST:localhost}
+    port: ${ES_PORT:9200}
+    scheme: ${ES_SCHEME:http}
+  mongodb:
+    barrage-enabled: ${YOUBILI_MONGO_BARRAGE_ENABLED:true}
+  alipay:
+    gateway-url: ${ALIPAY_GATEWAY_URL:https://openapi-sandbox.dl.alipaydev.com/gateway.do}
+    app-id: ${ALIPAY_APP_ID:}
+    app-private-key: ${ALIPAY_APP_PRIVATE_KEY:}
+    alipay-public-key: ${ALIPAY_PUBLIC_KEY:}
+    notify-url: ${ALIPAY_NOTIFY_URL:http://localhost:10001/api/v1/alipay/notify}
+    return-url: ${ALIPAY_RETURN_URL:http://localhost:5173/orders}
 
 logging:
   level:
-    cn.tedu: debug
-
-
-
-
-
+    com.youbili: debug

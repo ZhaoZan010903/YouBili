@@ -1,6 +1,26 @@
-/YouBili_front/node_modules/
-/youbili-project-backend/src/main/resources/videos/2023-04-14 10-44-46.mp4
-/youbili-project-backend/src/main/resources/application-dev.yaml
-/youbili-project-backend/src/main/resources/application-ecs.yaml
-/youbili-project-backend/src/main/resources/application-public.yaml
+# IDE & OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
 
+# Java / Maven
+target/
+*.jar
+*.war
+*.log
+hs_err_pid*
+
+# Node / Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.env.local
+.env.*.local
+
+# Local runtime uploads & secrets
+uploads/
+application-local.yaml
+application-secret.yaml

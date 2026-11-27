@@ -1,0 +1,40 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: youbili-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-youbili123}
+      MYSQL_DATABASE: youbili
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/youbili_schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: youbili-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  mongodb:
+    image: mongo:8.0
+    container_name: youbili-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: youbili
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mysql_data:
+  redis_data:
+  mongo_data:

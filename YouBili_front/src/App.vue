@@ -1,37 +1,28 @@
 <template>
-  <div id="app">
-    <!--    <handder></handder>-->
-    <!--    <div id="content">-->
-    <!--      <sidebar-vue></sidebar-vue>-->
-    <!--      <div class="i_w">-->
-    <router-view/>
-    <!--      </div>-->
-    <!--      -->
-    <!--    </div>-->
-  </div>
+  <router-view />
+  <AuthModal />
 </template>
 
-<script>
-export default {}
+<script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue'
+import AuthModal from '@/components/AuthModal.vue'
+import { useAuthStore } from '@/stores/auth'
+import { useUiStore } from '@/stores/ui'
+
+const authStore = useAuthStore()
+const uiStore = useUiStore()
+
+function handleAuthExpired() {
+  authStore.clearSession()
+  authStore.openAuthModal('login')
+}
+
+onMounted(() => {
+  uiStore.initTheme()
+  window.addEventListener('youbili:auth-expired', handleAuthExpired)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('youbili:auth-expired', handleAuthExpired)
+})
 </script>
-
-<style>
-* {
-  padding: 0;
-  margin: 0;
-  text-decoration: none;
-  border: 0;
-}
-
-#content {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.i_w {
-  margin-left: 250px;
-  margin-top: 60px;
-  width: calc(100% - 250px);
-  /* margin: 60px auto; */
-}
-</style>
