@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youbili.modules.interaction.mapper.HistoryMapper">
+
+    <select id="selectHistoryList" resultType="com.youbili.modules.interaction.vo.HistoryItemVO">
+        SELECT h.historyID                               AS historyId,
+               v.videoID                                 AS videoId,
+               v.title                                   AS title,
+               v.videoImgUrl                             AS videoImgUrl,
+               TIME_FORMAT(v.duration, '%H:%i:%s')       AS duration,
+               u.userID                                  AS authorId,
+               u.nickname                                AS authorNickname,
+               u.imgUrl                                  AS authorAvatarUrl,
+               v.viewCount                               AS viewCount,
+               TIME_FORMAT(h.watchDuration, '%H:%i:%s')  AS watchDuration,
+               h.watchDate                               AS watchDate
+        FROM history h
+                 INNER JOIN video v ON h.videoID = v.videoID AND v.enable = 1
+                 INNER JOIN `user` u ON v.userID = u.userID
+        WHERE h.userID = #{userId}
+          AND h.enable = 1
+        <if test="keyword != null and keyword != ''">
+            AND (v.title LIKE CONCAT('%', #{keyword}, '%') OR u.nickname LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY h.watchDate DESC
+    </select>
+
+    <select id="selectRecentHistoryCards" resultType="com.youbili.modules.video.vo.VideoCardVO">
+        SELECT v.videoID                            AS videoId,
+               v.userID                             AS userId,
+               v.title                              AS title,
+               v.description                        AS description,
+               TIME_FORMAT(v.duration, '%H:%i:%s')  AS duration,
+               v.uploadDate                         AS uploadDate,
+               v.videoSrcUrl                        AS videoSrcUrl,
+               v.videoImgUrl                        AS videoImgUrl,
+               u.nickname                           AS authorNickname,
+               u.imgUrl                             AS authorAvatarUrl,
+               c.categoryID                         AS categoryId,
+               c.categoryName                       AS categoryName,
+               v.viewCount                          AS viewCount,
+               v.likeCount                          AS likeCount,
+               v.favoriteCount                      AS favoriteCount,
+               v.barrageCount                       AS barrageCount,
+               v.commentCount                       AS commentCount,
+               v.reviewStatus                       AS reviewStatus
+        FROM history h
+                 INNER JOIN video v ON h.videoID = v.videoID AND v.enable = 1
+                 INNER JOIN `user` u ON v.userID = u.userID
+                 LEFT JOIN videocategory vc ON v.videoID = vc.videoID AND vc.enable = 1
+                 LEFT JOIN categorie c ON vc.categoryID = c.categoryID
+        WHERE h.userID = #{userId}
+          AND h.enable = 1
+        ORDER BY h.watchDate DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

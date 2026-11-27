@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youbili.modules.user.mapper.FollowMapper">
+
+    <select id="selectFollowList" resultType="com.youbili.modules.user.vo.FollowUserVO">
+        SELECT f.followID                                          AS followId,
+               u.userID                                            AS userId,
+               u.nickname                                          AS nickname,
+               u.imgUrl                                            AS avatarUrl,
+               u.accountLevel                                      AS accountLevel,
+               u.fans                                              AS fansCount,
+               u.follows                                           AS followCount,
+               f.followDate                                        AS followDate,
+               EXISTS(SELECT 1
+                      FROM follow f2
+                      WHERE f2.followerID = u.userID
+                        AND f2.followedID = #{userId}
+                        AND f2.enable = 1)                         AS mutualFollow
+        FROM follow f
+                 INNER JOIN `user` u ON f.followedID = u.userID
+        WHERE f.followerID = #{userId}
+          AND f.enable = 1
+        ORDER BY f.followDate DESC
+    </select>
+
+    <select id="selectFanList" resultType="com.youbili.modules.user.vo.FollowUserVO">
+        SELECT f.followID                                          AS followId,
+               u.userID                                            AS userId,
+               u.nickname                                          AS nickname,
+               u.imgUrl                                            AS avatarUrl,
+               u.accountLevel                                      AS accountLevel,
+               u.fans                                              AS fansCount,
+               u.follows                                           AS followCount,
+               f.followDate                                        AS followDate,
+               EXISTS(SELECT 1
+                      FROM follow f2
+                      WHERE f2.followerID = #{userId}
+                        AND f2.followedID = u.userID
+                        AND f2.enable = 1)                         AS mutualFollow
+        FROM follow f
+                 INNER JOIN `user` u ON f.followerID = u.userID
+        WHERE f.followedID = #{userId}
+          AND f.enable = 1
+        ORDER BY f.followDate DESC
+    </select>
+
+    <select id="selectFollowedUserIds" resultType="java.lang.Long">
+        SELECT followedID
+        FROM follow
+        WHERE followerID = #{userId}
+          AND enable = 1
+    </select>
+
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.youbili.modules.recommend.mapper.RecommendMapper">
+
+    <select id="selectAggregatedUserBehaviors" resultType="com.youbili.modules.recommend.entity.UserBehaviorScore">
+        SELECT userID AS userId,
+               videoID AS videoId,
+               SUM(weight) AS score
+        FROM (
+            SELECT userID, videoID, 1.0 AS weight
+            FROM history
+            WHERE enable = 1
+            UNION ALL
+            SELECT userID, videoID, CASE WHEN typeEnable = 1 THEN 3.0 ELSE -3.0 END AS weight
+            FROM likes
+            WHERE enable = 1
+            UNION ALL
+            SELECT userID, videoID, 5.0 AS weight
+            FROM favorite
+            WHERE enable = 1
+        ) AS combined
+        GROUP BY userID, videoID
+        LIMIT #{limit}
+    </select>
+
+</mapper>
